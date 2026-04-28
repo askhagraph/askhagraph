@@ -1,6 +1,6 @@
 {
   "name": "@askhagraph/core-engine",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Core analysis engine for AskhaGraph call graph explorer",
   "type": "module",
   "main": "dist/index.js",
@@ -24,7 +24,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@askhagraph/native": "0.3.0",
+    "@askhagraph/native": "0.3.1",
     "fast-glob": "^3.3.3",
     "string-similarity": "^4.0.4"
   },

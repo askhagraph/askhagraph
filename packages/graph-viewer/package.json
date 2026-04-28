@@ -1,6 +1,6 @@
 {
   "name": "@askhagraph/graph-viewer",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "description": "Interactive Cytoscape.js graph viewer for AskhaGraph",
   "type": "module",

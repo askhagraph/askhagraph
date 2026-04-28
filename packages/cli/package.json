@@ -1,6 +1,6 @@
 {
   "name": "@askhagraph/cli",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "CLI interface for AskhaGraph call graph explorer",
   "type": "module",
   "main": "dist/index.js",
@@ -27,8 +27,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@askhagraph/core-engine": "0.3.0",
-    "@askhagraph/native": "0.3.0",
+    "@askhagraph/core-engine": "0.3.1",
+    "@askhagraph/native": "0.3.1",
     "fast-glob": "^3.3.3"
   }
 }
