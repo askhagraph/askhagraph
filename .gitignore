@@ -30,5 +30,8 @@ Thumbs.db
 # Kiro specs (internal development notes)
 .kiro/specs/
 
+# Private deploy guide
+DEPLOY.md
+
 # Test reports
 playwright-report/

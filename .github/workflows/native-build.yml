@@ -104,7 +104,7 @@ jobs:
         run: |
           napi artifacts --build-output-dir artifacts --npm-dir npm
 
-      - name: Install dependencies
+      - name: Install native dependencies
         working-directory: packages/native
         run: npm install
 
@@ -123,6 +123,9 @@ jobs:
       - name: Publish @askhagraph/native
         working-directory: packages/native
         run: npm publish --access public --provenance
+
+      - name: Install workspace dependencies
+        run: npm install
 
       - name: Build @askhagraph/core-engine
         run: npm run build --workspace=packages/core-engine
