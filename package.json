@@ -1,6 +1,6 @@
 {
   "name": "askhagraph",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "type": "module",
   "description": "Feature-scoped call graph explorer for multi-language codebases",

@@ -330,14 +330,40 @@ export class GraphBuilder implements IGraphBuilder {
       if (!entries && index instanceof LazySymbolIndex) {
         index.ensureSymbolFromImports(methodName, callSite.filePath);
         entries = index.symbols.get(methodName);
+
+        // If still not found, do a bounded search (needed for Java where
+        // package imports don't map to relative file paths)
+        if (!entries) {
+          index.ensureSymbolParsed(methodName);
+          entries = index.symbols.get(methodName);
+        }
+      }
+
+      // Also ensure the receiver class is parsed (needed for Strategy 1)
+      const capitalizedReceiver = receiverName.charAt(0).toUpperCase() + receiverName.slice(1);
+      if (index instanceof LazySymbolIndex) {
+        if (!index.symbols.has(receiverName)) {
+          index.ensureSymbolParsed(receiverName);
+        }
+        if (!index.symbols.has(capitalizedReceiver)) {
+          index.ensureSymbolParsed(capitalizedReceiver);
+        }
       }
 
       if (entries && entries.length > 0) {
         // Strategy 1: Check if the receiver is a known project class/type by name.
         // e.g., receiver "graphBuilder" → check "graphBuilder" and "GraphBuilder"
+        // Also check if any file in the index matches the receiver name (common in
+        // Java where CheckExecutor interface lives in CheckExecutor.java but the
+        // parser only extracts methods, not the class/interface declaration itself).
         const receiverIsKnown =
           index.symbols.has(receiverName) ||
-          index.symbols.has(receiverName.charAt(0).toUpperCase() + receiverName.slice(1));
+          index.symbols.has(capitalizedReceiver) ||
+          entries.some((e) => {
+            const fileName = e.filePath.replace(/\\/g, '/').split('/').pop() ?? '';
+            const baseName = fileName.replace(/\.[^.]+$/, '');
+            return baseName === receiverName || baseName === capitalizedReceiver;
+          });
         if (receiverIsKnown) {
           const sameFile = entries.find((e) => e.filePath === callSite.filePath);
           return sameFile ?? entries[0];
@@ -395,6 +421,43 @@ export class GraphBuilder implements IGraphBuilder {
 
   /** Default maximum number of nodes before traversal stops expanding. */
   private static readonly DEFAULT_MAX_NODES = 500;
+
+  /**
+   * Check if a symbol is an interface/abstract method with no body.
+   * These have a bodyRange where startLine === endLine (just the signature).
+   */
+  private isAbstractOrInterfaceMethod(symbol: SymbolEntry): boolean {
+    return symbol.bodyRange.startLine === symbol.bodyRange.endLine;
+  }
+
+  /**
+   * Find all concrete implementations of an interface/abstract method.
+   * Searches the index for methods with the same name that have actual bodies
+   * (startLine !== endLine) and are defined in different files than the interface.
+   */
+  private findImplementations(
+    interfaceSymbol: SymbolEntry,
+    index: SymbolIndex,
+  ): SymbolEntry[] {
+    const entries = index.symbols.get(interfaceSymbol.name);
+    if (!entries) return [];
+
+    // For lazy index: trigger a bounded search to find implementations
+    // that may not have been parsed yet
+    if (index instanceof LazySymbolIndex) {
+      index.ensureSymbolParsed(interfaceSymbol.name);
+    }
+
+    const updatedEntries = index.symbols.get(interfaceSymbol.name);
+    if (!updatedEntries) return [];
+
+    return updatedEntries.filter((entry) =>
+      // Must have an actual body (not an interface/abstract declaration)
+      entry.bodyRange.startLine !== entry.bodyRange.endLine &&
+      // Must be a different definition than the interface method itself
+      !(entry.filePath === interfaceSymbol.filePath && entry.line === interfaceSymbol.line),
+    );
+  }
 
   /**
    * Check if the node cap has been reached.
@@ -542,54 +605,73 @@ export class GraphBuilder implements IGraphBuilder {
       }
 
       if (resolved) {
-        const calleeNode = this.symbolToGraphNode(resolved);
-        const calleeId = calleeNode.id;
+        // Check if the resolved symbol is an interface/abstract method (no body).
+        // If so, find all concrete implementations and traverse each one.
+        const targets = this.isAbstractOrInterfaceMethod(resolved)
+          ? this.findImplementations(resolved, index)
+          : [resolved];
 
-        // Cycle detection — node is on the current DFS path
-        if (traversalStack.has(calleeId)) {
+        // If no implementations found, fall back to the interface method itself
+        // (it will appear as a leaf node with no further calls)
+        if (targets.length === 0) {
+          targets.push(resolved);
+        }
+
+        for (const target of targets) {
+          const calleeNode = this.symbolToGraphNode(target);
+          const calleeId = calleeNode.id;
+
+          // Re-check node cap for each implementation
+          if (this.isNodeCapReached(nodes, options)) {
+            break;
+          }
+
+          // Cycle detection — node is on the current DFS path
+          if (traversalStack.has(calleeId)) {
+            if (!nodes.has(calleeId)) {
+              nodes.set(calleeId, calleeNode);
+            }
+            nodes.get(calleeId)!.metadata.isCycleParticipant = true;
+            currentNode.metadata.isCycleParticipant = true;
+            edges.push({
+              sourceId,
+              targetId: calleeId,
+              kind: 'cycle_back_edge',
+              metadata: {},
+            });
+            continue;
+          }
+
           if (!nodes.has(calleeId)) {
             nodes.set(calleeId, calleeNode);
           }
-          nodes.get(calleeId)!.metadata.isCycleParticipant = true;
-          currentNode.metadata.isCycleParticipant = true;
+
           edges.push({
             sourceId,
             targetId: calleeId,
-            kind: 'cycle_back_edge',
+            kind: 'call',
             metadata: {},
           });
-          continue;
-        }
 
-        if (!nodes.has(calleeId)) {
-          nodes.set(calleeId, calleeNode);
-        }
+          // Skip subtree if this node was already fully traversed via another path.
+          // This prevents exponential re-traversal in diamond-shaped call graphs.
+          if (fullyVisited!.has(calleeId)) {
+            continue;
+          }
 
-        edges.push({
-          sourceId,
-          targetId: calleeId,
-          kind: 'call',
-          metadata: {},
-        });
-
-        // Skip subtree if this node was already fully traversed via another path.
-        // This prevents exponential re-traversal in diamond-shaped call graphs.
-        if (fullyVisited.has(calleeId)) {
-          continue;
-        }
-
-        // Recurse into callee if not already depth-limited
-        if (!nodes.get(calleeId)!.metadata.isDepthLimited) {
-          this.traverseDownstream(
-            nodes.get(calleeId)!,
-            index,
-            options,
-            nodes,
-            edges,
-            traversalStack,
-            depth + 1,
-            fullyVisited,
-          );
+          // Recurse into callee if not already depth-limited
+          if (!nodes.get(calleeId)!.metadata.isDepthLimited) {
+            this.traverseDownstream(
+              nodes.get(calleeId)!,
+              index,
+              options,
+              nodes,
+              edges,
+              traversalStack,
+              depth + 1,
+              fullyVisited,
+            );
+          }
         }
       } else {
         // Unresolved call site
