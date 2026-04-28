@@ -1,0 +1,10 @@
+{
+  "name": "@askhagraph/native-win32-x64-msvc",
+  "version": "0.3.0",
+  "os": ["win32"],
+  "cpu": ["x64"],
+  "main": "askhagraph-native.win32-x64-msvc.node",
+  "files": ["*.node"],
+  "description": "AskhaGraph native addon prebuilt binary for Windows x64 (MSVC)",
+  "license": "MIT"
+}

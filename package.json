@@ -1,0 +1,43 @@
+{
+  "name": "askhagraph",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Feature-scoped call graph explorer for multi-language codebases",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/core-engine",
+    "packages/native",
+    "packages/graph-viewer",
+    "packages/vscode-extension",
+    "packages/cli"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:ext": "npm run build -w packages/graph-viewer && npm run build -w packages/vscode-extension",
+    "package": "npm run build:ext && cd packages/vscode-extension && npx @vscode/vsce package --no-dependencies --allow-star-activation",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint 'packages/*/src/**/*.ts'",
+    "lint:fix": "eslint 'packages/*/src/**/*.ts' --fix",
+    "format": "prettier --write 'packages/*/src/**/*.ts'",
+    "format:check": "prettier --check 'packages/*/src/**/*.ts'"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.4.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0"
+  },
+  "volta": {
+    "node": "24.15.0"
+  },
+  "dependencies": {
+    "@napi-rs/cli": "^3.6.2"
+  }
+}

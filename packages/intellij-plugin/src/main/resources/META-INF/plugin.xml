@@ -1,0 +1,62 @@
+<idea-plugin>
+    <id>com.askhagraph.intellij</id>
+    <name>AskhaGraph</name>
+    <vendor>AskhaGraph</vendor>
+    <description>Feature-scoped call graph explorer for multi-language codebases</description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="AskhaGraph"
+                           displayType="BALLOON"
+                           key="notification.group.askhagraph"/>
+        <toolWindow id="AskhaGraph"
+                    anchor="right"
+                    factoryClass="com.askhagraph.intellij.ui.GraphViewerToolWindowFactory"
+                    icon="AllIcons.Actions.Execute"/>
+    </extensions>
+
+    <actions>
+        <group id="AskhaGraph.Menu" text="AskhaGraph" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="AskhaGraph.AnalyzeCurrentFunction"
+                    class="com.askhagraph.intellij.actions.AnalyzeCurrentFunctionAction"
+                    text="Analyze Current Function"
+                    description="Analyze the call graph starting from the function at cursor"
+                    icon="AllIcons.Actions.Execute">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift G"/>
+            </action>
+            <action id="AskhaGraph.AnalyzeFeature"
+                    class="com.askhagraph.intellij.actions.AnalyzeFeatureAction"
+                    text="Analyze Feature..."
+                    description="Analyze a feature by natural language description"/>
+            <separator/>
+            <action id="AskhaGraph.SetPathSource"
+                    class="com.askhagraph.intellij.actions.SetPathSourceAction"
+                    text="Set as Path Source"
+                    description="Set the function at cursor as the path source"/>
+            <action id="AskhaGraph.SetPathTarget"
+                    class="com.askhagraph.intellij.actions.SetPathTargetAction"
+                    text="Set as Path Target &amp; Analyze"
+                    description="Set the function at cursor as the path target and analyze the path from source"/>
+        </group>
+
+        <!-- Editor context menu -->
+        <group id="AskhaGraph.EditorPopup" text="AskhaGraph" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <action id="AskhaGraph.EditorPopup.AnalyzeCurrentFunction"
+                    class="com.askhagraph.intellij.actions.AnalyzeCurrentFunctionAction"
+                    text="Analyze Current Function"
+                    description="Analyze the call graph starting from the function at cursor"/>
+            <separator/>
+            <action id="AskhaGraph.EditorPopup.SetPathSource"
+                    class="com.askhagraph.intellij.actions.SetPathSourceAction"
+                    text="Set as Path Source"
+                    description="Set the function at cursor as the path source"/>
+            <action id="AskhaGraph.EditorPopup.SetPathTarget"
+                    class="com.askhagraph.intellij.actions.SetPathTargetAction"
+                    text="Set as Path Target &amp; Analyze"
+                    description="Set the function at cursor as the path target and analyze the path"/>
+        </group>
+    </actions>
+</idea-plugin>

@@ -1,0 +1,10 @@
+{
+  "name": "@askhagraph/native-darwin-x64",
+  "version": "0.3.0",
+  "os": ["darwin"],
+  "cpu": ["x64"],
+  "main": "askhagraph-native.darwin-x64.node",
+  "files": ["*.node"],
+  "description": "AskhaGraph native addon prebuilt binary for macOS x64 (Intel)",
+  "license": "MIT"
+}

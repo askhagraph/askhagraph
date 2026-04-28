@@ -1,0 +1,34 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Compiled config files (generated from .ts sources)
+vitest.config.js
+vitest.config.js.map
+vitest.config.d.ts
+vitest.config.d.ts.map
+
+# Rust
+packages/native/target/
+packages/native/*.node
+
+# IDE
+.vscode/
+.idea/
+
+# IntelliJ plugin generated resources
+packages/intellij-plugin/src/main/resources/engine/
+packages/intellij-plugin/src/main/resources/webview/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AskhaGraph cache
+.askhagraph/
+
+# Kiro specs (internal development notes)
+.kiro/specs/
+
+# Test reports
+playwright-report/

@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "Spec Alignment Check",
+  "description": "After a spec task file is created, analyzes requirements, design, and tasks for alignment. Checks requirements coverage, scope compliance, and design alignment. Presents findings one-by-one with severity levels and waits for user guidance before proceeding.",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      "tasks.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the requirements, design, and implementation tasks for alignment. Perform the following checks:\n\n1. **Requirements Coverage**: Verify that every requirement has corresponding tasks in the implementation plan\n2. **Scope Compliance**: Ensure no tasks exist that fall outside the defined requirements\n3. **Design Alignment**: Check that the design properly addresses all requirements and that tasks implement the design\n\nFor each issue found, provide:\n- The specific requirement/design/task that is misaligned\n- The nature of the misalignment (missing coverage, out of scope, design gap)\n- Concrete remediation steps (update requirements, add tasks, remove tasks, clarify design)\n\nPresent findings ONE-BY-ONE, with recommendations in order from best recommendation to least, in a clear, actionable format with severity levels (Critical, Important, Minor). Give options and a recommendation.\n\nReview these files:\n- Requirements documents: **/requirements.md\n- Design documents: **/design.md\n- Implementation/task documents: **/tasks.md\n\nWhen I have confirmed that the final alignment is complete, rewrite all of the tasks in red/green/refactor format."
+  },
+  "workspaceFolderName": "AskhaGraph",
+  "shortName": "spec-alignment-check"
+}

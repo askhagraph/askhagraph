@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Lessons Learned",
+  "description": "Manual hook to run at the end of a session. Reviews the conversation for problems encountered, repeated mistakes, missing documentation, and suggests improvements to hooks, steering files, or workspace setup.",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review the entire conversation history of this session and identify lessons learned. Look for:\n\n1. **Repeated mistakes or corrections**: Did the agent make errors that the user had to correct? Could a steering file rule have prevented this?\n\n2. **Missing documentation**: Were there assumptions made that turned out wrong because documentation was missing or outdated? Suggest specific steering file updates or doc additions.\n\n3. **Hook opportunities**: Were there manual checks the user had to request that could be automated with a hook? If a hook already exists but didn't catch something, suggest how to improve its prompt.\n\n4. **Pattern gaps**: Did the session reveal coding patterns, conventions, or architectural decisions that aren't documented in steering files?\n\n5. **Security or quality concerns**: Were there any security, performance, or accessibility issues that slipped through? Could a preToolUse or postToolUse hook catch these?\n\n6. **Workflow friction**: Were there moments where the interaction was inefficient?\n\nFor each finding, provide:\n- What happened (brief)\n- Root cause (why it happened)\n- Recommended fix (specific: which file to update, what hook to create, what steering rule to add)\n\n**IMPORTANT — Rule quality guidelines:**\nWhen recommending steering file rules, follow these principles:\n- Write rules as general, reusable principles — not tied to specific phases, sprints, or one-time tasks.\n- Good: 'Never hardcode user-facing strings in component files. All shared values go in src/constants.ts.'\n- Bad: 'src/constants.ts must be created in Phase 1 alongside types.'\n- Good: 'State that must survive navigation belongs in a Context provider at the root layout level.'\n- Bad: 'In Phase 2, remember to lift conversation state to a context provider.'\n- Rules should apply every time the situation arises, not just the first time it was encountered.\n- Avoid referencing build phases, sprint numbers, or session-specific context in rule text.\n- If a rule only applies to a very narrow scenario that's unlikely to recur, skip it.\n\nIf the session was smooth with no notable issues, say 'Clean session — no lessons learned to capture.'"
+  }
+}

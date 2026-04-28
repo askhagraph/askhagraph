@@ -1,0 +1,9 @@
+src/**
+tsconfig.json
+.gitignore
+node_modules/**
+**/*.ts
+**/*.map
+
+# Include the graph-viewer bundle (do NOT ignore it)
+!../graph-viewer/dist/graph-viewer.bundle.js

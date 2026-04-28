@@ -1,0 +1,34 @@
+{
+  "name": "@askhagraph/cli",
+  "version": "0.3.0",
+  "description": "CLI interface for AskhaGraph call graph explorer",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "SEE LICENSE IN ../../LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/askhagraph/askhagraph",
+    "directory": "packages/cli"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "askhagraph": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.js.map"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@askhagraph/core-engine": "0.3.0",
+    "@askhagraph/native": "0.3.0",
+    "fast-glob": "^3.3.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "name": "Post-Phase Gap Check",
+  "description": "After writing code files, automatically check for implementation gaps: missing wiring, unused services, hardcoded strings that should be in constants, state not persisted, screens showing stale data, security concerns like plain-text secrets, or any other potential gaps that might cause issues.",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "After this write operation, do a quick sanity check:\n1. If a new service/function was created, is it actually called from a consumer? Flag any unused exports.\n2. If user-facing strings were written, are they in src/constants.ts or hardcoded inline? Flag inline strings.\n3. If a secret/token/key is being stored, is it using expo-secure-store? Flag any AsyncStorage usage for secrets.\n4. If state was added to a component, should it survive tab navigation? If yes, is it in a Context provider?\n5. If a new data source was added, are existing screens still showing hardcoded values for that data?\n6. Check for any other potential gaps that might cause issues.\n\nOnly report if you find an actual issue. If everything looks clean, say nothing."
+  },
+  "workspaceFolderName": "AskhaGraph",
+  "shortName": "post-phase-gap-check"
+}

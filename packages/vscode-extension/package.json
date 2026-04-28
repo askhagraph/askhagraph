@@ -1,0 +1,130 @@
+{
+  "name": "askhagraph",
+  "version": "0.3.0",
+  "displayName": "AskhaGraph",
+  "description": "Feature-scoped call graph explorer for multi-language codebases. Visualize, navigate, and analyze call trees across TypeScript, JavaScript, Java, Rust, Python, Go, and C#.",
+  "publisher": "askhagraph",
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "call graph",
+    "code analysis",
+    "visualization",
+    "tree-sitter",
+    "static analysis"
+  ],
+  "main": "dist/extension.js",
+  "types": "dist/extension.d.ts",
+  "contributes": {
+    "commands": [
+      {
+        "command": "askhagraph.analyzeCurrentFunction",
+        "title": "AskhaGraph: Analyze Current Function"
+      },
+      {
+        "command": "askhagraph.analyzeFeature",
+        "title": "AskhaGraph: Analyze Feature..."
+      },
+      {
+        "command": "askhagraph.findPath",
+        "title": "AskhaGraph: Find Path Between Functions..."
+      },
+      {
+        "command": "askhagraph.setPathSource",
+        "title": "AskhaGraph: Set as Path Source"
+      },
+      {
+        "command": "askhagraph.setPathTarget",
+        "title": "AskhaGraph: Set as Path Target & Analyze"
+      },
+      {
+        "command": "askhagraph.clearPath",
+        "title": "AskhaGraph: Clear Path Selection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "askhagraph.analyzeCurrentFunction",
+          "group": "askhagraph@1"
+        },
+        {
+          "command": "askhagraph.setPathSource",
+          "group": "askhagraph@2"
+        },
+        {
+          "command": "askhagraph.setPathTarget",
+          "group": "askhagraph@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "askhagraph.analyzeCurrentFunction"
+        },
+        {
+          "command": "askhagraph.analyzeFeature"
+        },
+        {
+          "command": "askhagraph.findPath"
+        },
+        {
+          "command": "askhagraph.setPathSource"
+        },
+        {
+          "command": "askhagraph.setPathTarget"
+        },
+        {
+          "command": "askhagraph.clearPath"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AskhaGraph",
+      "properties": {
+        "askhagraph.timeout": {
+          "type": "number",
+          "default": 60,
+          "description": "Timeout in seconds for Core Engine responses."
+        },
+        "askhagraph.hideLibraryCalls": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hide unresolved library/built-in calls from the graph and list views."
+        },
+        "terminal.integrated.scrollback": {
+          "type": "number",
+          "default": 3000,
+          "description": "Number of scrollback lines for the integrated terminal. Increased from default (1000) to accommodate AskhaGraph CLI output."
+        }
+      }
+    },
+    "terminal": {
+      "profiles": [
+        {
+          "id": "askhagraph.cli",
+          "title": "AskhaGraph CLI"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "npm run check-types && node esbuild.js",
+    "build:production": "npm run check-types && node esbuild.js --production",
+    "check-types": "tsc --noEmit",
+    "watch": "node esbuild.js --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@askhagraph/core-engine": "*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.24.0"
+  }
+}

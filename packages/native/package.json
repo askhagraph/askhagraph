@@ -1,0 +1,41 @@
+{
+  "name": "@askhagraph/native",
+  "version": "0.3.0",
+  "description": "Native tree-sitter parser and symbol indexer for AskhaGraph (Rust via napi-rs)",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "SEE LICENSE IN ../../LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/askhagraph/askhagraph",
+    "directory": "packages/native"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "napi": {
+    "binaryName": "askhagraph-native",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ]
+  },
+  "optionalDependencies": {
+    "@askhagraph/native-darwin-x64": "0.3.0",
+    "@askhagraph/native-darwin-arm64": "0.3.0",
+    "@askhagraph/native-linux-x64-gnu": "0.3.0",
+    "@askhagraph/native-linux-arm64-gnu": "0.3.0",
+    "@askhagraph/native-win32-x64-msvc": "0.3.0"
+  },
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0"
+  }
+}

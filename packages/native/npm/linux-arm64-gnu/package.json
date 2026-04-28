@@ -1,0 +1,10 @@
+{
+  "name": "@askhagraph/native-linux-arm64-gnu",
+  "version": "0.3.0",
+  "os": ["linux"],
+  "cpu": ["arm64"],
+  "main": "askhagraph-native.linux-arm64-gnu.node",
+  "files": ["*.node"],
+  "description": "AskhaGraph native addon prebuilt binary for Linux ARM64 (glibc)",
+  "license": "MIT"
+}

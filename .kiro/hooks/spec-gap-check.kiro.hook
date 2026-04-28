@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "name": "Spec Gap Check",
+  "description": "After the agent finishes its turn, check if any spec files (requirements.md, design.md, tasks.md) were created or modified during the session. If so, perform a thorough gap analysis.",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check if any spec files were created or modified during this session (requirements.md, design.md, or tasks.md under .kiro/specs/). If files were created or modified respond with \"Spec files changed: \" and then your actual response. If NO spec files were created or modified, respond with nothing (so don't respond) and stop.\n\nIf spec files WERE created or modified, perform a thorough gap analysis:\n\nFor requirements.md:\n1. Check if all acceptance criteria use EARS patterns (WHEN/SHALL/IF-THEN)\n2. Look for missing edge cases: error handling, offline scenarios, conflict resolution, data migration...\n3. Check if mutation persistence across page reloads is addressed (if relevant)\n4. Verify no ambiguous terms — every domain concept should be in the glossary\n5. Verify in general if we didn't miss anything else that might have an impact\n\nFor design.md:\n1. Cross-reference every requirement — flag any requirement not addressed by the design\n2. Check if consumer components that will be affected are identified\n3. Verify interface changes document backward compatibility impact\n4. Check if new dependencies are specified with versions\n5. Look for hardcoded strings that should use i18n translation keys\n6. Verify error handling strategy is specified for each new component\n7. Check if environment variables or build config changes are needed\n\nFor tasks.md:\n1. Verify every requirement is referenced by at least one task\n2. Check task ordering respects dependencies (migrations before services, services before UI)\n3. Look for missing consumer update tasks when interfaces change\n4. Verify test tasks exist for all correctness properties in the design\n5. Check if steering file updates are included\n6. Look for missing cleanup tasks (dead code removal, old file deletion)\n\nPresent findings as a concise list of gaps found with recommended fix approach (multiple recommendations if user input needed). If no gaps found, say 'No gaps detected.'"
+  },
+  "workspaceFolderName": "AskhaGraph",
+  "shortName": "spec-gap-check"
+}

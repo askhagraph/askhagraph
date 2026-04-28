@@ -1,0 +1,10 @@
+{
+  "name": "@askhagraph/native-darwin-arm64",
+  "version": "0.3.0",
+  "os": ["darwin"],
+  "cpu": ["arm64"],
+  "main": "askhagraph-native.darwin-arm64.node",
+  "files": ["*.node"],
+  "description": "AskhaGraph native addon prebuilt binary for macOS ARM64 (Apple Silicon)",
+  "license": "MIT"
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "IntelliJ Parity Check",
+  "description": "When files in the VS Code extension are modified, check if equivalent functionality needs to be added to the IntelliJ plugin",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "packages/vscode-extension/src/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check if the changes just made to the VS Code extension have equivalent counterparts in packages/intellij-plugin/. Look for new commands, message types, webview messages, error handling patterns, or UI features that should also exist in the IntelliJ plugin. Only flag if something is genuinely missing — don't flag VS Code-specific APIs."
+  }
+}
