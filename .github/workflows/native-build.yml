@@ -75,6 +75,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     name: Publish npm packages
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v6
@@ -84,6 +87,9 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm (trusted publishing requires npm >= 11.5.1)
+        run: npm install -g npm@latest
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8.0.1
@@ -109,33 +115,25 @@ jobs:
             if [ -d "$dir" ]; then
               echo "Publishing $dir..."
               cd "$dir"
-              npm publish --access public || echo "Skipping $dir (may already exist)"
+              npm publish --access public --provenance || echo "Skipping $dir (may already exist)"
               cd ../..
             fi
           done
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @askhagraph/native
         working-directory: packages/native
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
 
       - name: Build @askhagraph/core-engine
         run: npm run build --workspace=packages/core-engine
 
       - name: Publish @askhagraph/core-engine
         working-directory: packages/core-engine
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
 
       - name: Build @askhagraph/cli
         run: npm run build --workspace=packages/cli
 
       - name: Publish @askhagraph/cli
         working-directory: packages/cli
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance

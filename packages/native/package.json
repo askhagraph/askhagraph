@@ -4,7 +4,7 @@
   "description": "Native tree-sitter parser and symbol indexer for AskhaGraph (Rust via napi-rs)",
   "main": "index.js",
   "types": "index.d.ts",
-  "license": "SEE LICENSE IN ../../LICENSE",
+  "license": "PolyForm Noncommercial License 1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/askhagraph/askhagraph",

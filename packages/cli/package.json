@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "license": "SEE LICENSE IN ../../LICENSE",
+  "license": "PolyForm Noncommercial License 1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/askhagraph/askhagraph",

@@ -4,7 +4,7 @@
   "displayName": "AskhaGraph",
   "description": "Feature-scoped call graph explorer for multi-language codebases. Visualize, navigate, and analyze call trees across TypeScript, JavaScript, Java, Rust, Python, Go, and C#.",
   "publisher": "askhagraph",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "PolyForm Noncommercial License 1.0.0",
   "engines": {
     "vscode": "^1.85.0"
   },
