@@ -125,10 +125,16 @@ jobs:
         run: npm publish --access public --provenance || echo "Skipping @askhagraph/native (may already exist)"
 
       - name: Install workspace dependencies
-        run: npm install
+        run: npm install --ignore-scripts
 
       - name: Build @askhagraph/core-engine
         run: npm run build --workspace=packages/core-engine
+
+      - name: Pin core-engine dependency versions for publish
+        working-directory: packages/core-engine
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          npm pkg set "dependencies.@askhagraph/native=$VERSION"
 
       - name: Publish @askhagraph/core-engine
         working-directory: packages/core-engine
@@ -136,6 +142,13 @@ jobs:
 
       - name: Build @askhagraph/cli
         run: npm run build --workspace=packages/cli
+
+      - name: Pin CLI dependency versions for publish
+        working-directory: packages/cli
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          npm pkg set "dependencies.@askhagraph/core-engine=$VERSION"
+          npm pkg set "dependencies.@askhagraph/native=$VERSION"
 
       - name: Publish @askhagraph/cli
         working-directory: packages/cli

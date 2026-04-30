@@ -27,8 +27,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@askhagraph/core-engine": "0.3.2",
-    "@askhagraph/native": "0.3.2",
+    "@askhagraph/core-engine": "*",
+    "@askhagraph/native": "*",
     "fast-glob": "^3.3.3"
   }
 }

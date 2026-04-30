@@ -24,7 +24,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@askhagraph/native": "0.3.2",
+    "@askhagraph/native": "*",
     "fast-glob": "^3.3.3",
     "string-similarity": "^4.0.4"
   },
